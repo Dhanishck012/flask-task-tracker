@@ -5,15 +5,19 @@ import click
 from flask.cli import with_appcontext
 
 # --- App Configuration ---
-# This line makes the paths explicit and foolproof for deployment environments like Render.
-app = Flask(__name__, instance_path=os.path.join(os.path.abspath(os.path.dirname(__file__)), 'instance'), template_folder='templates')
+# Create the Flask app instance. Explicitly defining the template_folder is a
+# robust practice for deployment environments like Render.
+app = Flask(__name__, template_folder='templates')
 
 # A secret key is required by Flask to handle sessions and flash messages securely.
 app.config['SECRET_KEY'] = 'a-strong-and-random-secret-key' # In a real app, this should be a secure, random value.
 
-# Configure the database URI. This ensures the database file is created
-# inside a dedicated 'instance' folder within our project directory.
-app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(app.instance_path, 'tasks.db')}"
+# --- Database Configuration ---
+# We will create the database in a dedicated 'instance' folder.
+# This is a standard Flask practice.
+instance_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance')
+os.makedirs(instance_path, exist_ok=True) # Ensure the folder exists before the app starts.
+app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(instance_path, 'tasks.db')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Initialize the SQLAlchemy extension with our Flask app.
@@ -30,16 +34,10 @@ class Task(db.Model):
         return f'<Task {self.id}>'
 
 # --- Self-Initializing Database ---
-# This block of code ensures that the database and its tables are created
-# automatically when the application starts up. This is a robust pattern
-# for platforms like Render.
+# This block of code ensures the database tables are created automatically
+# when the application module is first loaded. This is a foolproof way to
+# initialize a database on platforms like Render.
 with app.app_context():
-    # Create the instance folder if it doesn't exist to avoid errors.
-    try:
-        os.makedirs(app.instance_path)
-    except OSError:
-        pass # The folder already exists.
-    # Create all tables defined in our models.
     db.create_all()
 
 # --- Application Routes ---
@@ -85,7 +83,7 @@ def complete_task(id):
     db.session.commit()
     return redirect(url_for('index'))
 
-# --- Custom CLI Command (for local development) ---
+# --- Custom CLI Command (for local development only) ---
 @click.command(name='reset-db')
 @with_appcontext
 def reset_db_command():
