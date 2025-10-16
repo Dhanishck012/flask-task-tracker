@@ -1,27 +1,23 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
+import click
+from flask.cli import with_appcontext
 
-# App and Database Configuration
-# Get the absolute path of the directory the script is in
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-import os
-app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
-# Configuring the database URI to be in an 'instance' folder in the basedir
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'tasks.db')
+# --- App Configuration ---
+app = Flask(__name__, template_folder='templates')
+# The secret key is needed for flash messages
+app.config['SECRET_KEY'] = 'your_secret_key_here' # For production, use a real secret key
+# Configure the database path
+project_dir = os.path.dirname(os.path.abspath(__file__))
+database_file = f"sqlite:///{os.path.join(project_dir, 'instance', 'tasks.db')}"
+app.config['SQLALCHEMY_DATABASE_URI'] = database_file
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-# Creating the instance folder (if it doesn't exist)
-instance_path = os.path.join(basedir, 'instance')
-if not os.path.exists(instance_path):
-    os.makedirs(instance_path)
 
 db = SQLAlchemy(app)
 
-# Database Model
+# --- Database Model ---
 class Task(db.Model):
-    """Represents a single task in the database."""
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(200), nullable=False)
     completed = db.Column(db.Boolean, default=False)
@@ -29,16 +25,14 @@ class Task(db.Model):
     def __repr__(self):
         return f'<Task {self.id}>'
 
-# Application Routes
+# --- Application Routes ---
 @app.route('/')
 def index():
-    """Display all tasks."""
     tasks = Task.query.order_by(Task.id).all()
     return render_template('index.html', tasks=tasks)
 
 @app.route('/add', methods=['POST'])
 def add_task():
-    """Add a new task."""
     task_content = request.form['content']
     new_task = Task(content=task_content)
     try:
@@ -50,18 +44,16 @@ def add_task():
 
 @app.route('/delete/<int:id>')
 def delete_task(id):
-    """Delete a task."""
     task_to_delete = Task.query.get_or_404(id)
     try:
         db.session.delete(task_to_delete)
         db.session.commit()
         return redirect(url_for('index'))
     except:
-        return 'There was a problem deleting that task'
+        return 'There was an issue deleting that task'
 
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
 def edit_task(id):
-    """Edit an existing task."""
     task = Task.query.get_or_404(id)
     if request.method == 'POST':
         task.content = request.form['content']
@@ -75,31 +67,32 @@ def edit_task(id):
 
 @app.route('/complete/<int:id>')
 def complete_task(id):
-    """Mark a task as complete or incomplete."""
     task = Task.query.get_or_404(id)
     task.completed = not task.completed
     try:
         db.session.commit()
         return redirect(url_for('index'))
     except:
-        return 'There was an issue updating your task'
+        return 'There was an issue updating that task'
 
-## CLI Commands for Database Management
-@app.cli.command("init-db")
+# --- Custom CLI Commands ---
+@click.command(name='init-db')
+@with_appcontext
 def init_db_command():
-    """Initializes the database with the correct tables."""
-    with app.app_context():
-        db.create_all()
-    print("Initialized the database.")
+    """Creates the database tables."""
+    db.create_all()
+    click.echo('Initialized the database.')
 
-## Command to wipe and reset the database for a clean start
-@app.cli.command("reset-db")
+@click.command(name='reset-db')
+@with_appcontext
 def reset_db_command():
-    """Wipes and resets the database."""
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
-    print("Database wiped and reset.")
+    """Wipes and recreates the database."""
+    db.drop_all()
+    db.create_all()
+    click.echo('Database wiped and reset.')
+
+app.cli.add_command(init_db_command)
+app.cli.add_command(reset_db_command)
 
 if __name__ == "__main__":
     app.run(debug=True)
