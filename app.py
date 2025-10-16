@@ -28,6 +28,9 @@ class Task(db.Model):
 # --- Application Routes ---
 @app.route('/')
 def index():
+    # This ensures the database and tables are created before the first request
+    with app.app_context():
+        db.create_all()
     tasks = Task.query.order_by(Task.id).all()
     return render_template('index.html', tasks=tasks)
 
