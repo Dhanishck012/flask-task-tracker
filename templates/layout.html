@@ -1,49 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!--
-      🌙 Zenith Tasks – Base Template
-      This is the main HTML layout file for the Flask app.
-      It includes Tailwind CSS, Google Fonts, and FontAwesome icons.
-      The layout defines a splash screen, global styles, and animations.
-    -->
-
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Dynamic title block for Flask templating -->
     <title>{% block title %}Zenith Tasks{% endblock %}</title>
-
-    <!-- ✅ Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- ✅ Google Fonts (Inter family) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
-
-    <!-- ✅ FontAwesome for icons -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
 
-    <!-- ==========================
-         🎨 Custom Styles
-         Defines background gradients, scrollbars, and animations.
-    =========================== -->
     <style>
-      /* Base body styling */
       body {
         font-family: "Inter", sans-serif;
-        background-color: #0f172a; /* Deep navy background */
-        color: #e2e8f0; /* Light text color for contrast */
+        background-color: #0f172a;
+        color: #e2e8f0;
       }
-
-      /* Background gradient for main container */
       .main-gradient {
         background-image: linear-gradient(
           145deg,
@@ -53,8 +31,6 @@
           #0369a1
         );
       }
-
-      /* Subtle glass effect for inner containers */
       .glass-pane {
         background: rgba(30, 41, 59, 0.5);
         backdrop-filter: blur(16px);
@@ -62,7 +38,6 @@
         border: 1px solid rgba(51, 65, 85, 0.5);
       }
 
-      /* Scrollbar customization */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -76,8 +51,6 @@
       ::-webkit-scrollbar-thumb:hover {
         background: #64748b;
       }
-
-      /* Simple fade-and-slide-up animation for task items */
       @keyframes fadeInSlideUp {
         from {
           opacity: 0;
@@ -89,25 +62,18 @@
         }
       }
 
-      /* Applied to each task dynamically */
       .task-item {
         animation: fadeInSlideUp 0.5s ease-out forwards;
         opacity: 0;
       }
     </style>
   </head>
-
   <body class="main-gradient min-h-screen">
-    <!-- ==========================
-         🚀 Splash Screen (Startup Loading Animation)
-         Appears once per session, then fades away smoothly.
-    =========================== -->
     <div
       id="splash-screen"
       class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900 transition-opacity duration-500 ease-in-out"
     >
       <div class="flex items-center gap-4">
-        <!-- Logo + Title -->
         <i
           class="fas fa-check-double text-5xl text-violet-500 animate-pulse"
         ></i>
@@ -118,11 +84,6 @@
       <p class="mt-4 text-slate-400">Loading your objectives...</p>
     </div>
 
-    <!-- ==========================
-         🧩 Main Content Section
-         Hidden during splash, fades in after it disappears.
-         The Flask `{% block content %}` will inject page-specific content here.
-    =========================== -->
     <div
       id="main-content"
       class="opacity-0 transition-opacity duration-500 ease-in-out"
@@ -130,29 +91,22 @@
       {% block content %}{% endblock %}
     </div>
 
-    <!-- ==========================
-         ⚙️ JavaScript Logic
-         Controls splash screen behavior using sessionStorage.
-         Ensures the splash screen only appears once per user session.
-    =========================== -->
     <script>
       window.addEventListener("load", () => {
         const splash = document.getElementById("splash-screen");
         const main = document.getElementById("main-content");
 
-        // If the splash screen has already been shown this session, skip it
+        // Checking the splash screen in this session
         if (sessionStorage.getItem("splashShown")) {
           splash.style.display = "none";
           main.style.opacity = "1";
         } else {
-          // Show splash for 0.5 seconds before fading out
           setTimeout(() => {
             splash.style.opacity = "0";
             main.style.opacity = "1";
             setTimeout(() => (splash.style.display = "none"), 500);
           }, 500);
-
-          // Mark splash as shown in this session
+          // setting flag in sessionStorage
           sessionStorage.setItem("splashShown", "true");
         }
       });

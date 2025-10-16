@@ -1,15 +1,9 @@
 {% extends "layout.html" %} {% block title %}Dashboard - Zenith Tasks{% endblock
 %} {% block content %}
-<!-- 
-  Main Dashboard Page
-  Displays task list, add form, and actions for completion, editing, and deletion.
--->
-
 <div
   class="min-h-screen flex flex-col items-center justify-center p-4 pt-16 sm:pt-4"
 >
   <div class="w-full max-w-3xl mx-auto">
-    <!-- Header Section -->
     <header class="text-center mb-10">
       <div class="flex justify-center items-center gap-3 mb-2">
         <i class="fas fa-check-double text-4xl text-violet-400"></i>
@@ -22,15 +16,12 @@
       </p>
     </header>
 
-    <!-- Main Task Area -->
     <main class="glass-pane rounded-2xl shadow-2xl p-6 md:p-8">
-      <!-- Task Input Form -->
       <form
         action="{{ url_for('add_task') }}"
         method="POST"
         class="flex items-center gap-3"
       >
-        <!-- Input Field with Icon -->
         <div class="relative w-full">
           <i
             class="fas fa-plus absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none"
@@ -44,8 +35,6 @@
             required
           />
         </div>
-
-        <!-- Add Button -->
         <button
           type="submit"
           class="flex-shrink-0 px-5 py-3 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-4 focus:ring-violet-500/50 transition-all duration-300 transform hover:scale-105"
@@ -54,22 +43,16 @@
         </button>
       </form>
 
-      <!-- Task List Section -->
       <div class="mt-8 flow-root">
         <ul id="task-list" class="-my-3 divide-y divide-slate-700/50">
-          <!-- If there are tasks, display them -->
           {% if tasks %} {% for task in tasks %}
           <li class="task-item py-3 flex items-center justify-between">
-            <!-- Task Content -->
             <p
               class="text-lg text-slate-200 {% if task.completed %}line-through text-slate-500{% endif %}"
             >
               {{ task.content }}
             </p>
-
-            <!-- Task Action Buttons -->
             <div class="flex items-center space-x-2 ml-4">
-              <!-- Complete / Undo Button -->
               <a
                 href="{{ url_for('complete_task', id=task.id) }}"
                 class="w-9 h-9 flex items-center justify-center text-sm font-medium text-white rounded-lg transition-all duration-300 transform hover:scale-110 {% if task.completed %} bg-amber-500 hover:bg-amber-400 {% else %} bg-green-600 hover:bg-green-500 {% endif %}"
@@ -79,8 +62,6 @@
                   class="fas {% if task.completed %}fa-undo-alt{% else %}fa-check{% endif %}"
                 ></i>
               </a>
-
-              <!-- Edit Button -->
               <a
                 href="{{ url_for('edit_task', id=task.id) }}"
                 class="w-9 h-9 flex items-center justify-center text-sm font-medium text-white bg-slate-600 hover:bg-slate-500 rounded-lg transition-all duration-300 transform hover:scale-110"
@@ -88,8 +69,6 @@
               >
                 <i class="fas fa-pencil-alt"></i>
               </a>
-
-              <!-- Delete Button -->
               <a
                 href="{{ url_for('delete_task', id=task.id) }}"
                 onclick="return confirm('Are you sure you want to permanently delete this task?');"
@@ -100,10 +79,8 @@
               </a>
             </div>
           </li>
-          {% endfor %}
+          {% endfor %} {% else %}
 
-          <!-- If no tasks exist, show placeholder -->
-          {% else %}
           <li
             class="py-10 text-center text-slate-500 border-2 border-dashed border-slate-700 rounded-lg"
           >
@@ -117,15 +94,14 @@
       </div>
     </main>
 
-    <!-- Footer -->
     <footer class="text-center mt-10 text-sm text-slate-500">
       <p>Developed by Danish Muneer Ck for the Fresher Screening Task.</p>
     </footer>
   </div>
 </div>
 
-<!-- Small animation to stagger task list appearance -->
 <script>
+  // Staggering the animation of task items on page load
   document.addEventListener("DOMContentLoaded", () => {
     const taskItems = document.querySelectorAll(".task-item");
     taskItems.forEach((item, index) => {
@@ -133,5 +109,4 @@
     });
   });
 </script>
-
 {% endblock %}
