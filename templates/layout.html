@@ -15,7 +15,6 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
     />
-
     <style>
       body {
         font-family: "Inter", sans-serif;
@@ -37,7 +36,6 @@
         -webkit-backdrop-filter: blur(16px);
         border: 1px solid rgba(51, 65, 85, 0.5);
       }
-
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -61,7 +59,6 @@
           transform: translateY(0);
         }
       }
-
       .task-item {
         animation: fadeInSlideUp 0.5s ease-out forwards;
         opacity: 0;
@@ -83,20 +80,16 @@
       </div>
       <p class="mt-4 text-slate-400">Loading your objectives...</p>
     </div>
-
     <div
       id="main-content"
       class="opacity-0 transition-opacity duration-500 ease-in-out"
     >
       {% block content %}{% endblock %}
     </div>
-
     <script>
       window.addEventListener("load", () => {
         const splash = document.getElementById("splash-screen");
         const main = document.getElementById("main-content");
-
-        // Checking the splash screen in this session
         if (sessionStorage.getItem("splashShown")) {
           splash.style.display = "none";
           main.style.opacity = "1";
@@ -106,7 +99,6 @@
             main.style.opacity = "1";
             setTimeout(() => (splash.style.display = "none"), 500);
           }, 500);
-          // setting flag in sessionStorage
           sessionStorage.setItem("splashShown", "true");
         }
       });

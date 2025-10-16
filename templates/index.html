@@ -1,5 +1,5 @@
 {% extends "layout.html" %} {% block title %}Dashboard - Zenith Tasks{% endblock
-%}
+%} {% block content %}
 <div
   class="min-h-screen flex flex-col items-center justify-center p-4 pt-16 sm:pt-4"
 >
@@ -15,7 +15,6 @@
         Your personal command center for productivity.
       </p>
     </header>
-
     <main class="glass-pane rounded-2xl shadow-2xl p-6 md:p-8">
       <form
         action="{{ url_for('add_task') }}"
@@ -42,7 +41,6 @@
           Add
         </button>
       </form>
-
       <div class="mt-8 flow-root">
         <ul id="task-list" class="-my-3 divide-y divide-slate-700/50">
           {% if tasks %} {% for task in tasks %}
@@ -66,21 +64,18 @@
                 href="{{ url_for('edit_task', id=task.id) }}"
                 class="w-9 h-9 flex items-center justify-center text-sm font-medium text-white bg-slate-600 hover:bg-slate-500 rounded-lg transition-all duration-300 transform hover:scale-110"
                 title="Edit Task"
-              >
-                <i class="fas fa-pencil-alt"></i>
-              </a>
+                ><i class="fas fa-pencil-alt"></i
+              ></a>
               <a
                 href="{{ url_for('delete_task', id=task.id) }}"
                 onclick="return confirm('Are you sure you want to permanently delete this task?');"
                 class="w-9 h-9 flex items-center justify-center text-sm font-medium text-white bg-red-600 hover:bg-red-500 rounded-lg transition-all duration-300 transform hover:scale-110"
                 title="Delete Task"
-              >
-                <i class="fas fa-trash-alt"></i>
-              </a>
+                ><i class="fas fa-trash-alt"></i
+              ></a>
             </div>
           </li>
           {% endfor %} {% else %}
-
           <li
             class="py-10 text-center text-slate-500 border-2 border-dashed border-slate-700 rounded-lg"
           >
@@ -93,15 +88,12 @@
         </ul>
       </div>
     </main>
-
     <footer class="text-center mt-10 text-sm text-slate-500">
-      <p>Developed by Danish Muneer Ck for the Fresher Screening Task.</p>
+      <p>Developed by Danish Muneer CK for the Fresher Screening Task.</p>
     </footer>
   </div>
 </div>
-
 <script>
-  // Staggering the animation of task items on page load
   document.addEventListener("DOMContentLoaded", () => {
     const taskItems = document.querySelectorAll(".task-item");
     taskItems.forEach((item, index) => {
