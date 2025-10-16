@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Zenith Tasks{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0f172a;
+        color: #e2e8f0;
+      }
+      .main-gradient {
+        background-image: linear-gradient(
+          145deg,
+          #3b0764,
+          #0f172a 40%,
+          #0f172a 60%,
+          #0369a1
+        );
+      }
+      .glass-pane {
+        background: rgba(30, 41, 59, 0.5);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(51, 65, 85, 0.5);
+      }
+
+      ::-webkit-scrollbar {
+        width: 8px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #1e293b;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #475569;
+        border-radius: 4px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #64748b;
+      }
+      @keyframes fadeInSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .task-item {
+        animation: fadeInSlideUp 0.5s ease-out forwards;
+        opacity: 0;
+      }
+    </style>
+  </head>
+  <body class="main-gradient min-h-screen">
+    <div
+      id="splash-screen"
+      class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-slate-900 transition-opacity duration-500 ease-in-out"
+    >
+      <div class="flex items-center gap-4">
+        <i
+          class="fas fa-check-double text-5xl text-violet-500 animate-pulse"
+        ></i>
+        <h1 class="text-6xl font-extrabold text-slate-100 tracking-tight">
+          Zenith Tasks
+        </h1>
+      </div>
+      <p class="mt-4 text-slate-400">Loading your objectives...</p>
+    </div>
+
+    <div
+      id="main-content"
+      class="opacity-0 transition-opacity duration-500 ease-in-out"
+    >
+      {% block content %}{% endblock %}
+    </div>
+
+    <script>
+      window.addEventListener("load", () => {
+        const splash = document.getElementById("splash-screen");
+        const main = document.getElementById("main-content");
+
+        // Checking the splash screen in this session
+        if (sessionStorage.getItem("splashShown")) {
+          splash.style.display = "none";
+          main.style.opacity = "1";
+        } else {
+          setTimeout(() => {
+            splash.style.opacity = "0";
+            main.style.opacity = "1";
+            setTimeout(() => (splash.style.display = "none"), 500);
+          }, 500);
+          // setting flag in sessionStorage
+          sessionStorage.setItem("splashShown", "true");
+        }
+      });
+    </script>
+  </body>
+</html>

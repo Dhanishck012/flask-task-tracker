@@ -1,0 +1,51 @@
+{% extends "layout.html" %} {% block title %}Edit Task - Zenith Tasks{% endblock
+%} {% block content %}
+<div class="min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="w-full max-w-xl mx-auto">
+    <header class="text-center mb-10">
+      <div class="flex justify-center items-center gap-3 mb-2">
+        <i class="fas fa-pencil-alt text-4xl text-violet-400"></i>
+        <h1 class="text-5xl font-extrabold text-white tracking-tight">
+          Update Objective
+        </h1>
+      </div>
+      <p class="text-slate-400 text-lg">Refine the details of your task.</p>
+    </header>
+
+    <main class="glass-pane rounded-2xl shadow-2xl p-6 md:p-8">
+      <form action="{{ url_for('edit_task', id=task.id) }}" method="POST">
+        <div class="mb-6">
+          <label
+            for="content"
+            class="block text-sm font-medium text-slate-300 mb-2"
+            >Task Description</label
+          >
+          <input
+            type="text"
+            name="content"
+            id="content"
+            value="{{ task.content }}"
+            class="w-full px-4 py-3 bg-slate-900/70 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-all duration-300"
+            required
+          />
+        </div>
+
+        <div class="flex items-center justify-end space-x-4 mt-8">
+          <a
+            href="{{ url_for('index') }}"
+            class="px-6 py-3 text-sm font-semibold text-slate-300 bg-slate-700/50 rounded-lg hover:bg-slate-600/50 transition-all duration-300"
+          >
+            Cancel
+          </a>
+          <button
+            type="submit"
+            class="px-6 py-3 bg-violet-600 text-white font-semibold rounded-lg hover:bg-violet-700 focus:outline-none focus:ring-4 focus:ring-violet-500/50 transition-all duration-300 transform hover:scale-105"
+          >
+            Save Changes
+          </button>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+{% endblock %}
