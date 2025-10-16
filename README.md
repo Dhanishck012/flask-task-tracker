@@ -1,14 +1,13 @@
 Zenith Tasks - A Flask-Based Task Tracker
 
 Welcome to Zenith Tasks! This is a simple, clean, and functional web application for managing your daily objectives. I built this project using Python, Flask, and SQLite as part of a screening task for a Software Developer (Fresher) role. It was a fantastic opportunity to build a complete application from scratch, focusing on clean code, a modern user experience, and professional deployment practices.
-
 Crafted with care by Danish Muneer CK.
 
 Live Demo
 
-The application is deployed and live on Render. You can try it out here:
+The application is deployed and live on Render. You can try it live here:
 
-$$Your Live Render App URL Will Go Here$$
+[https://danish-task-tracker.onrender.com/]
 
 Key Features
 
