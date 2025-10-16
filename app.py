@@ -6,7 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 # Get the absolute path of the directory the script is in
 basedir = os.path.abspath(os.path.dirname(__file__))
 
-app = Flask(__name__)
+import os
+app = Flask(__name__, template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
 # Configuring the database URI to be in an 'instance' folder in the basedir
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'instance', 'tasks.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
